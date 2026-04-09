@@ -135,6 +135,14 @@ wss.on('connection', (ws) => {
 });
 
 const PORT = process.env.PORT || 8080;
+
+server.on('request', (req, res) => {
+  if (req.url === '/health' || req.url === '/') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'ok' }));
+  }
+});
+
 server.listen(PORT, () => {
   console.log(`WebSocket server running on port ${PORT}`);
 });
