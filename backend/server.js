@@ -56,8 +56,7 @@ wss.on('connection', (ws) => {
           if (targetRoom && targetRoom.has(message.to)) {
             targetRoom.get(message.to).ws.send(JSON.stringify({
               ...message,
-              from: clientId,
-              fromName: clientName
+              from: clientId
             }));
           }
           break;
@@ -81,14 +80,13 @@ wss.on('connection', (ws) => {
         case 'update-name':
           const updateRoom = rooms.get(currentRoom);
           if (updateRoom && updateRoom.has(clientId)) {
-            const oldName = updateRoom.get(clientId).name;
+            clientName = message.name;
             updateRoom.get(clientId).name = clientName;
             updateRoom.forEach((client, id) => {
               if (id !== clientId) {
                 client.ws.send(JSON.stringify({
                   type: 'user-name-updated',
                   clientId,
-                  oldName,
                   newName: clientName
                 }));
               }
@@ -97,36 +95,38 @@ wss.on('connection', (ws) => {
           break;
 
         case 'leave':
-          handleLeave();
+          if (currentRoom && rooms.has(currentRoom)) {
+            const leaveroom = rooms.get(currentRoom);
+            if (leaveroom.has(clientId)) {
+              leaveroom.delete(clientId);
+              leaveroom.forEach((client) => {
+                client.ws.send(JSON.stringify({
+                  type: 'user-left',
+                  clientId
+                }));
+              });
+            }
+          }
           break;
       }
-    } catch (error) {
-      console.error('Error processing message:', error);
+    } catch (e) {
+      console.error('Message error:', e);
     }
   });
 
-  function handleLeave() {
+  ws.on('close', () => {
     if (currentRoom && rooms.has(currentRoom)) {
-      const room = rooms.get(currentRoom);
-      
-      room.forEach((client, id) => {
-        if (id !== clientId) {
+      const leaveroom = rooms.get(currentRoom);
+      if (leaveroom.has(clientId)) {
+        leaveroom.delete(clientId);
+        leaveroom.forEach((client) => {
           client.ws.send(JSON.stringify({
             type: 'user-left',
             clientId
           }));
-        }
-      });
-
-      room.delete(clientId);
-      if (room.size === 0) {
-        rooms.delete(currentRoom);
+        });
       }
     }
-  }
-
-  ws.on('close', () => {
-    handleLeave();
   });
 
   ws.on('error', (error) => {
@@ -135,13 +135,6 @@ wss.on('connection', (ws) => {
 });
 
 const PORT = process.env.PORT || 8080;
-
-server.on('request', (req, res) => {
-  if (req.url === '/health' || req.url === '/') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok' }));
-  }
-});
 
 server.listen(PORT, () => {
   console.log(`WebSocket server running on port ${PORT}`);

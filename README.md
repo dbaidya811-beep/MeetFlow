@@ -19,8 +19,7 @@
 - **Live Participants** — See who's in the meeting in real-time
 - **Name Customization** — Personalize your display name
 - **Mobile Responsive** — Works flawlessly on desktop and mobile devices
-- **No Downloads** — Runs directly in the browser (Chrome, Firefox, Edge, Safari)
-- **All-in-One Server** — Frontend + WebSocket server on a single port
+- **No Downloads** — Runs directly in the browser
 
 ---
 
@@ -28,46 +27,64 @@
 
 | Layer | Technology |
 |-------|-----------|
-| Framework | Next.js 16, React 19 |
-| Styling | Tailwind CSS 4 |
+| Frontend | Next.js 16, React 19, Tailwind CSS 4 |
 | Real-time | WebRTC, WebSocket (ws) |
-| Server | Node.js (combined HTTP + WS) |
+| Server | Node.js |
 
 ---
 
 ## Quick Start
 
-```bash
-# Install dependencies
-npm install
+### Installation
 
-# Start development server (both frontend + WebSocket on port 3000)
+```bash
+npm install
+```
+
+### Run Development (Separate Terminals)
+
+```bash
+# Terminal 1 — Backend WebSocket Server
+npm run server
+
+# Terminal 2 — Next.js Frontend
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- WebSocket: ws://localhost:8080
 
 ---
 
 ## Deployment
 
-### Deploy to Render
+### Option 1: Render (Frontend + Backend together)
 
 1. **Push to GitHub:**
 ```bash
 git add .
-git commit -m "Ready for deployment"
+git commit -m "Deploy to Render"
 git push origin main
 ```
 
-2. **Create Web Service on Render:**
-   - Connect your GitHub repository
-   - Build Command: `npm install`
-   - Start Command: `npm run start`
-   - Environment: `NODE_ENV=production`
+2. **Render Dashboard → New Web Service:**
+   - Build: `npm install`
+   - Start: `node backend/server.js`
    - PORT: `3000`
 
-3. **Deploy** — Your app will be live at `https://your-app.onrender.com`
+3. Set environment variable: `NEXT_PUBLIC_WS_PORT=3000`
+
+### Option 2: Separate Deployments
+
+**Backend → Render:**
+- Build: `npm install`
+- Start: `node backend/server.js`
+- PORT: `3000`
+- URL: `wss://your-backend.onrender.com`
+
+**Frontend → Vercel:**
+- Deploy Next.js normally
+- Set env var: `NEXT_PUBLIC_WS_PORT=3000`
 
 ---
 
@@ -77,36 +94,28 @@ git push origin main
 meeting/
 ├── src/
 │   └── app/
-│       ├── meeting/[id]/     # Meeting room page
-│       ├── terms/            # Terms of service
-│       ├── privacy/         # Privacy policy
-│       ├── layout.js        # Root layout
-│       └── page.js         # Landing page
-├── server.js              # Combined Next.js + WebSocket server
-├── public/               # Static assets
+│       ├── meeting/[id]/     # Meeting room
+│       ├── terms/           # Terms
+│       ├── privacy/        # Privacy
+│       ├── layout.js       # Layout
+│       └── page.js       # Landing page
+├── backend/
+│   └── server.js      # WebSocket server (port 8080)
+├── public/           # Static assets
 ├── package.json
 └── README.md
 ```
 
 ---
 
-## How It Works
-
-1. **Create a Meeting** — Enter your name on the landing page and click "Start Meeting" to generate a unique room link
-2. **Share the Link** — Copy and share the meeting URL with participants
-3. **Join a Meeting** — Participants open the link and enter their name to join
-4. **WebRTC Connection** — The WebSocket server facilitates signaling; peers connect directly via WebRTC for video/audio
-5. **In-Meeting Features** — Use mute, video toggle, screen share, and chat controls
-
----
-
-## NPM Scripts
+## Developing
 
 | Command | Description |
 |---------|-----------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run start` | Start production server |
+| `npm run dev` | Next.js dev server |
+| `npm run server` | WebSocket server |
+| `npm run build` | Production build |
+| `npm run start` | Production start |
 | `npm run lint` | Run ESLint |
 
 ---
@@ -118,10 +127,8 @@ meeting/
 - Safari (latest)
 - Edge (latest)
 
-> Note: WebRTC requires a secure context (HTTPS) in production. For local development, localhost is allowed.
-
 ---
 
 ## License
 
-MIT License — see LICENSE file for details.
+MIT
