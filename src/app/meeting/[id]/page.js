@@ -140,8 +140,7 @@ export default function Meeting() {
 
   const connectWebSocket = () => {
     const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsPort = process.env.NEXT_PUBLIC_WS_PORT || '8080';
-    const wsUrl = `${wsProtocol}//${window.location.hostname}${wsPort === '80' || wsPort === '443' ? '' : ':' + wsPort}`;
+    const wsUrl = `${wsProtocol}//${window.location.host}`;
     console.log('Connecting to WebSocket:', wsUrl);
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
