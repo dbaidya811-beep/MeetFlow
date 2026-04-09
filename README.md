@@ -20,6 +20,7 @@
 - **Name Customization** — Personalize your display name
 - **Mobile Responsive** — Works flawlessly on desktop and mobile devices
 - **No Downloads** — Runs directly in the browser (Chrome, Firefox, Edge, Safari)
+- **All-in-One Server** — Frontend + WebSocket server on a single port
 
 ---
 
@@ -27,49 +28,46 @@
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Next.js 16, React 19, Tailwind CSS 4 |
-| Real-time | WebRTC, WebSocket |
-| Styling | Tailwind CSS |
-| Build Tool | Turbopack |
+| Framework | Next.js 16, React 19 |
+| Styling | Tailwind CSS 4 |
+| Real-time | WebRTC, WebSocket (ws) |
+| Server | Node.js (combined HTTP + WS) |
 
 ---
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- npm or yarn
-
-### Installation
+## Quick Start
 
 ```bash
-# Clone the repository
-git clone <your-repo-url>
-cd meeting
-
-# Install frontend dependencies
+# Install dependencies
 npm install
 
-# Install backend dependencies
-cd backend
-npm install
-cd ..
-```
-
-### Running the Application
-
-Start both the frontend and backend servers:
-
-```bash
-# Terminal 1 — Start the backend WebSocket server
-npm run server
-
-# Terminal 2 — Start the Next.js frontend
+# Start development server (both frontend + WebSocket on port 3000)
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## Deployment
+
+### Deploy to Render
+
+1. **Push to GitHub:**
+```bash
+git add .
+git commit -m "Ready for deployment"
+git push origin main
+```
+
+2. **Create Web Service on Render:**
+   - Connect your GitHub repository
+   - Build Command: `npm install`
+   - Start Command: `npm run start`
+   - Environment: `NODE_ENV=production`
+   - PORT: `3000`
+
+3. **Deploy** — Your app will be live at `https://your-app.onrender.com`
 
 ---
 
@@ -79,16 +77,15 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 meeting/
 ├── src/
 │   └── app/
-│       ├── meeting/[id]/      # Meeting room page
+│       ├── meeting/[id]/     # Meeting room page
 │       ├── terms/            # Terms of service
 │       ├── privacy/         # Privacy policy
 │       ├── layout.js        # Root layout
 │       └── page.js         # Landing page
-├── backend/
-│   └── server.js          # WebSocket signaling server
+├── server.js              # Combined Next.js + WebSocket server
 ├── public/               # Static assets
 ├── package.json
-└── tailwind.config.mjs
+└── README.md
 ```
 
 ---
@@ -103,15 +100,14 @@ meeting/
 
 ---
 
-## Development Commands
+## NPM Scripts
 
 | Command | Description |
 |---------|-----------|
-| `npm run dev` | Start Next.js development server |
+| `npm run dev` | Start development server |
 | `npm run build` | Build for production |
 | `npm run start` | Start production server |
 | `npm run lint` | Run ESLint |
-| `npm run server` | Start WebSocket server |
 
 ---
 
