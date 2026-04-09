@@ -1,36 +1,131 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MeetFlow
+
+<p align="center">
+  <strong>Video Meetings, Made Simple</strong>
+</p>
+
+<p align="center">
+  A real-time video conferencing application built with Next.js, WebRTC, and WebSocket for seamless peer-to-peer video communication.
+</p>
+
+---
+
+## Features
+
+- **Instant Meeting Creation** — Create rooms instantly and share links with participants
+- **HD Video & Audio** — Crystal-clear video calls using WebRTC
+- **Screen Sharing** — Share your screen for presentations and demos
+- **In-Meeting Chat** — Send text messages during calls
+- **Live Participants** — See who's in the meeting in real-time
+- **Name Customization** — Personalize your display name
+- **Mobile Responsive** — Works flawlessly on desktop and mobile devices
+- **No Downloads** — Runs directly in the browser (Chrome, Firefox, Edge, Safari)
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 16, React 19, Tailwind CSS 4 |
+| Real-time | WebRTC, WebSocket |
+| Styling | Tailwind CSS |
+| Build Tool | Turbopack |
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Clone the repository
+git clone <your-repo-url>
+cd meeting
+
+# Install frontend dependencies
+npm install
+
+# Install backend dependencies
+cd backend
+npm install
+cd ..
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Running the Application
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Start both the frontend and backend servers:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Terminal 1 — Start the backend WebSocket server
+npm run server
 
-## Learn More
+# Terminal 2 — Start the Next.js frontend
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+```
+meeting/
+├── src/
+│   └── app/
+│       ├── meeting/[id]/      # Meeting room page
+│       ├── terms/            # Terms of service
+│       ├── privacy/         # Privacy policy
+│       ├── layout.js        # Root layout
+│       └── page.js         # Landing page
+├── backend/
+│   └── server.js          # WebSocket signaling server
+├── public/               # Static assets
+├── package.json
+└── tailwind.config.mjs
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## How It Works
+
+1. **Create a Meeting** — Enter your name on the landing page and click "Start Meeting" to generate a unique room link
+2. **Share the Link** — Copy and share the meeting URL with participants
+3. **Join a Meeting** — Participants open the link and enter their name to join
+4. **WebRTC Connection** — The WebSocket server facilitates signaling; peers connect directly via WebRTC for video/audio
+5. **In-Meeting Features** — Use mute, video toggle, screen share, and chat controls
+
+---
+
+## Development Commands
+
+| Command | Description |
+|---------|-----------|
+| `npm run dev` | Start Next.js development server |
+| `npm run build` | Build for production |
+| `npm run start` | Start production server |
+| `npm run lint` | Run ESLint |
+| `npm run server` | Start WebSocket server |
+
+---
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+> Note: WebRTC requires a secure context (HTTPS) in production. For local development, localhost is allowed.
+
+---
+
+## License
+
+MIT License — see LICENSE file for details.
